@@ -10,10 +10,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
     fname = models.TextField(max_length=30)
     lname = models.TextField(max_length=30)
-    phone = models.CharField(max_lenthg=12)
+    phone = models.CharField(max_length=12)
     ppic = models.ImageField(upload_to='/ppic/media/ppics')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    rate = models.URLField(blank=True)
 
     def __str__(self):
         return self.email
