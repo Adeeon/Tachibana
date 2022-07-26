@@ -13,13 +13,13 @@ class HomeViewSet(viewsets.ModelViewSet):
     permission_classes = [isRegisteredOrReadOnly]
 
 class PageViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
     permission_classes = [isRegisteredOrReadOnly]
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = [isRegisteredOrReadOnly]
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -33,13 +33,13 @@ class HomeDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class PageDetail(generics.RetrieveUpdateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class PostDetail(generics.RetrieveUpdateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class CommentDetail(generics.RetrieveUpdateAPIView):

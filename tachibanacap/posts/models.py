@@ -11,7 +11,7 @@ class Post(models.Model):
     author = models.ForeignKey(get_user_model(), related_name='posts', on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
     image_head = models.URLField(blank=True)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='posts')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

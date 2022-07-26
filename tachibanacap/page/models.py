@@ -3,7 +3,7 @@ from users.models import CustomUser
 
 # Create your models here.
 class Page(models.Model):
-    name = models.TextField(max_length=20)
+    name = models.TextField(max_length=20, unique=True)
     top_image = models.ImageField(upload_to='pageimg/media', height_field=None, width_field=None, max_length=None)
     purpose = models.TextField(max_length=100)
 

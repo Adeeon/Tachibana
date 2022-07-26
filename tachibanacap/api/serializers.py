@@ -7,17 +7,17 @@ from users.models import CustomUser
 class NestedPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ('name')
+        fields = ('name', 'purpose', 'top_image')
 
 class NestedPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('title')
+        fields = ('title', 'body', 'author', 'rate', 'created')
 
 class NestedCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('body')
+        fields = ('body', 'author', 'rate', 'created')
 
 class NestedUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,7 +40,7 @@ class CommentSerializer(serializers.ModelSerializer):
     post_detail = NestedPostSerializer(many=True, source='posts', read_only=True)
     class Meta:
         model = Comment
-        fields = ('body', 'post_detail')
+        fields = ('body', 'author', 'created', 'rate', 'post_detail')
 
 class UserSerailizer(serializers.ModelSerializer):
     post_detail = NestedPostSerializer(many=True, source='title', read_only=True)
