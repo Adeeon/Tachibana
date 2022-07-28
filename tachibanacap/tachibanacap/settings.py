@@ -44,10 +44,6 @@ INSTALLED_APPS = [
     'page.apps.PageConfig',
     'api.apps.ApiConfig',
     
-    'ppic.apps.PpicConfig',
-    'pageimg.apps.PageimgConfig',
-    'postimg.apps.PostimgConfig',
-    'imgmanager.apps.ImgmanagerConfig'
 ]
 
 MIDDLEWARE = [
@@ -136,9 +132,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'Tachihome'
+LOGOUT_REDIRECT_URL = 'Tachihome'
 
 LOGIN_URL = 'login'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 

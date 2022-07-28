@@ -10,7 +10,7 @@ class Post(models.Model):
     body = models.TextField(max_length=2000)
     author = models.ForeignKey(get_user_model(), related_name='posts', on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
-    image_head = models.URLField(blank=True)
+    image_head = models.ImageField(upload_to='postpic/', blank=True, null= True)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='posts')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

@@ -6,23 +6,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
-    <link rel="stylesheet" href="{% static 'home.css'%}">
+    <link rel="stylesheet" href="{% static 'tachihome.css'%}">
     <title>Tachibana</title>
 </head>
     <body>
-        <p>Hello!</p>
-        <div id='tachihome'>
+    <div id='tachihome'>
         {% csrf_token %}
-        <div class='searchbar'></div>
-            <input type='text' v-model='searchbar'>
-        
         {% if user.is_authenticated %}
-        <div class='fpage'></div>
+            <h1>Welcome {{ user.username }}!</h1>
+            <p><a href="{% url 'logout' %}">Logout</a><p>
+        {% else %}
+            <h1>Hello, Orange Inpersonator!</h1>
+            <p>You are not logged in. <a href="{% url 'login' %}">Login</a> <a href="{% url 'users:signup' %}">Sign Up</a></p>
         {% endif %}
+        <div class='topbar'>
+            <div class='searchbar'>
+                <input type='text' v-model='searchbar'>
+            </div>
         </div>
+        <div class='page' v-for='page in home'>
+            <span v-if='page.top_image'><img :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'></img></span>
+            <div class='post' v-for='post in page.post_detail'>
+                <span v-if='post.title'><h1>[[post.title]]</h1></span>
+                <span v-if='post.image_head'><img :src='post.image_head'></span>
+                <span v-if='post.author'><h1>[[post.author]]</h1></span>
+                <span v-if='post.body'><p>[[post.body]]</p></span>
+        </div>
+            {% if user.is_authenticated %}
+            <div class='fpage'></div>
+            {% endif %}
         
-        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="{% static 'tachihome.js'%}"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{% static 'tachihome.js'%}"></script>
     </body>
 </head>

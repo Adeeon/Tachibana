@@ -63,9 +63,12 @@ const vm = new Vue ({
         }
     },
     created: function (){
-        loadhome()
-        loadpage()
-        loadpost()
-        loadcomment()
+        axios({
+            method: 'get',
+            url:'api/v1/pages'
+        }).then(response => this.home = response.data)
+    },
+    mounted: function() {
+        this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
     }
 })

@@ -27,22 +27,22 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [isRegisteredOrReadOnly]
 
-class HomeDetail(generics.RetrieveUpdateAPIView):
+class HomeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class PageDetail(generics.RetrieveUpdateAPIView):
+class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class PostDetail(generics.RetrieveUpdateAPIView):
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class CommentDetail(generics.RetrieveUpdateAPIView):
+class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -52,7 +52,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerailizer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class CurrentUserView(generics.RetrieveAPIView):
+class CurrentUserView(generics.RetrieveUpdateDestroyAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerailizer
     def get_object(self):
