@@ -44,18 +44,15 @@ const vm = new Vue ({
     },
     methods: {
         loadhome: function() {
-            this.loadedpage = {}
-            this.loadedpost = {}
             axios({
                 method: 'get',
-                url:'api/v1/TachiHome'
+                url:'api/v1/pages'
             }).then(response => this.home = response.data)
         },
-        loadpage: function(page) {
-            this.home = {}
+        loadpage: function() {
             axios({
                 method:'get', 
-                url:'api/v1/pages/' + page.id
+                url:'api/v1/pages/' + this.page
             }).then(response => this.loadedpage = response.data)
         },
         loadpost: function() {
@@ -68,7 +65,7 @@ const vm = new Vue ({
     created: function (){
         axios({
             method: 'get',
-            url:'api/v1/TachiHome'
+            url: window.location.pathname 
         }).then(response => this.home = response.data)
     },
     mounted: function() {

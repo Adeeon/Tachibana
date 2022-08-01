@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
     
     phone = models.CharField(max_length=12)
-    ppic = models.ImageField(upload_to='ppics/')
+    ppic = models.ImageField(upload_to='ppics/', blank=True, null=True)
     
     oranges = models.IntegerField(default=0)
 

@@ -10,6 +10,54 @@ p {
     font-size: 16px;
 }
 
-.searchbar {
+.pageimg {
+    width: 30px;
+    height: 30px;
+    margin-top: 8px;
+    margin-left: 8px;
+    box-sizing: content-box;
+    border-radius: 16px;
+
+}
+
+.pagename {
+    padding-left: 5px;
+    padding-top: 40px;
+    text-align: center;
+    font-size: 16px; 
+}
+
+.postimg {
+    width: 20%;
+    height: 20%;
+
+}
+
+.page {
     
+}
+.post {
+    max-width: 80%;
+    max-height: 20%;
+    border-style: solid;
+    border-color: black;
+    border-radius: 16px;
+    background-color: grey;
+    margin: 10px;
+    padding:16px
+}
+
+.topbar {
+    background-color: #333;
+    overflow: hidden;
+
+}
+
+.searchbar {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
 }

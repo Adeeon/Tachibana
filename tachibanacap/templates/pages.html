@@ -1,0 +1,44 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <link rel="stylesheet" href="{% static 'tachihome.css'%}">
+    <title>Tachibana</title>
+</head>
+    <body>
+    <div id='pages'>
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+            <h1>Welcome {{ user.username }}!</h1>
+            <p><a href="{% url 'logout' %}">Logout</a><p>
+        {% else %}
+            <h1>Hello, Orange Inpersonator!</h1>
+            <p>You are not logged in. <a href="{% url 'login' %}">Login</a> <a href="{% url 'users:signup' %}">Sign Up</a></p>
+        {% endif %}
+        <div class='topbar'>
+            <div class='searchbar'>
+                <input type='text' v-model='searchbar'>
+            </div>
+        </div>
+        <div class='page' v-for='page in home'>
+            <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><a :href='page.id'>[[page.name]]<a></img></span>
+            <div class='post' v-for='post in page.post_detail'>
+                <span v-if='post.title'><h1><a :href='post.id'>[[post.title]]</a></h1></span>
+                <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span>
+                <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
+                <span v-if='post.body'><p>[[post.body]]</p></span>
+        </div>
+            {% if user.is_authenticated %}
+            <div class='fpage'></div>
+            {% endif %}
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{% static 'pages.js'%}"></script>
+    </body>
+</head>

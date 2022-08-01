@@ -12,26 +12,39 @@
     <body>
     <div id='tachihome'>
         {% csrf_token %}
-        {% if user.is_authenticated %}
-            <h1>Welcome {{ user.username }}!</h1>
-            <p><a href="{% url 'logout' %}">Logout</a><p>
-        {% else %}
+       
+        <div class='topbar'>
+            <button @click='loadhome'>Home</button>
+            {% if user.is_authenticated %}
+            <h1>{{ user.username }}!<a href="{% url 'logout' %}">Logout</a></h1>
+            {% else %}
             <h1>Hello, Orange Inpersonator!</h1>
             <p>You are not logged in. <a href="{% url 'login' %}">Login</a> <a href="{% url 'users:signup' %}">Sign Up</a></p>
-        {% endif %}
-        <div class='topbar'>
+            {% endif %}
             <div class='searchbar'>
                 <input type='text' v-model='searchbar'>
             </div>
         </div>
-        <div class='page' v-for='page in home'>
-            <span v-if='page.top_image'><img :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'></img></span>
-            <div class='post' v-for='post in page.post_detail'>
-                <span v-if='post.title'><h1>[[post.title]]</h1></span>
-                <span v-if='post.image_head'><img :src='post.image_head'></span>
-                <span v-if='post.author'><h1>[[post.author]]</h1></span>
-                <span v-if='post.body'><p>[[post.body]]</p></span>
+        <div class='box' v-if='home'>
+            <div class='page' v-for='page in home'>
+                <div class='post' v-for='post in page.post_detail'>
+                    <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename'  @click='loadpage(page)'>[[page.name]]</button></img> Posted by <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span></span>
+                    <span v-if='post.title'><h1><a :href='post.id'>[[post.title]]</a></h1></span>
+                    <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
+                    <span v-if='post.body'><p>[[post.body]]</p></span>
+            </div>
         </div>
+        <div class='box' v-if='loadedpage'>
+            <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
+
+            <div class='page'>
+                <div class='post' v-for='post in loadedpage.post_detail'>
+                    <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span></span>
+                    <span v-if='post.title'><h1><a :href='post.id'>[[post.title]]</a></h1></span>
+                    <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
+                    <span v-if='post.body'><p>[[post.body]]</p></span>
+            </div>
+        </div>    
             {% if user.is_authenticated %}
             <div class='fpage'></div>
             {% endif %}

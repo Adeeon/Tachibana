@@ -10,5 +10,5 @@ router.register('posts', views.PostViewSet, basename='posts')
 router.register('comments', views.CommentViewSet, basename='comments')
 
 urlpatterns = router.urls + [
-    path('currentuser/', views.CurrentUserView.as_view())
+    path('currentuser/', views.CurrentUserView.as_view()),
 ]
