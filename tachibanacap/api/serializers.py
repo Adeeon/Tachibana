@@ -40,18 +40,19 @@ class PageSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     com_detail = NestedCommentSerializer(many=True, read_only=True, source='comments')
     user_detail = NestedUserSerializer(read_only=True, source='author')
-    page_detail= NestedPageSerializer(many=True, read_only=True, source='page')
+    post_detail = NestedPostSerializer(many=True, read_only=True, source='posts')
+  
     class Meta:
         model = Post
-        fields= ('id', 'title', 'author', 'body', 'rate', 'image_head', 'created', 'page','page_detail', 'user_detail', 'com_detail')
+        fields= ('id', 'title', 'author', 'body', 'rate', 'image_head', 'created', 'page', 'user_detail', 'post_detail','com_detail')
         
 
 class CommentSerializer(serializers.ModelSerializer):
     post_detail = NestedPostSerializer(many=True, source='posts', read_only=True)
-    user_detail= NestedUserSerializer(many=True, read_only=True, source='author')
+    user_detail= NestedUserSerializer(read_only=True, source='author')
     class Meta:
         model = Comment
-        fields = ('id', 'body', 'author', 'created', 'rate', 'post_detail')#, 'user_detail')
+        fields = ('id', 'body', 'author', 'created', 'rate', 'post_detail', 'user_detail')
 
 class UserSerailizer(serializers.ModelSerializer):
     post_detail = NestedPostSerializer(many=True, source='title', read_only=True)

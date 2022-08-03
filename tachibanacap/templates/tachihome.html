@@ -25,38 +25,58 @@
                 <input type='text' v-model='searchbar'>
             </div>
         </div>
-        <div class='box' v-if='home'>
+        <div class='box' v-if='Object.keys(home).length'>
             <div class='page' v-for='page in home'>
                 <div class='post' v-for='post in page.post_detail'>
                     <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename' @click='loadpage(page)'>[[page.name]]</button></img> Posted by <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span></span>
-                    <span v-if='post.title'><h1><button @click='loadpost(post)'>[[post.title]]</a></h1></span>
+                    <span v-if='post.title'><h1><button @click='loadpost(post)'>[[post.title]]</button></h1></span>
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
                     <span v-if='post.body'><p>[[post.body]]</p></span>
+                    <div class='postbot'>
+                        <div class='rate'><button @click='postrateup(post)'>↑</button><p>[[post.rate]]</p><button @click='postratedown(post)'>↓</button></div><div class='coms'><p></p></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class='box' v-if='loadedpage'>
+
+        <div class='box' v-if='Object.keys(loadedpage).length'>
             <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
 
             <div class='page'>
                 <div class='post' v-for='post in loadedpage.post_detail'>
-                    <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span></span>
-                    <span v-if='post.title'><h1><a :href='post.id'>[[post.title]]</a></h1></span>
+                    <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><button @click='loadprofile(post.user_detail)'>[[post.user_detail.username]]</button></span></span>
+                    <span v-if='post.title'><h1><button @click='loadpost(post)'>[[post.title]]</button></h1></span>
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
                     <span v-if='post.body'><p>[[post.body]]</p></span>
+                    <div class='postbot'>
+                    <div class='rate'><button @click='postrateup(post)'>↑</button><p>[[post.rate]]</p><button @click='postratedown(post)'>↓</button></div><div class='coms'><p></p></div>
+                    </div>      
                 </div>
             </div>
-        </div> 
-        <div class='box' v-if='loadedpost'>
+        </div>
+
+        <div class='box' v-if='Object.keys(loadedpost).length'>
             <div class='page'>
                 <div class='post'>
-                    <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><a :href='loadedpost.user_detail.id'>[[loadedpost.user_detail.username]]</a></span></span>
+                    <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><button @click='loadprofile(loadedpost.user_detail.username)'>[[loadedpost.user_detail.username]]</button></span></span>
                     <span v-if='loadedpost.title'><h1><a @click='loadedpost(post)'>[[loadedpost.title]]</a></h1></span>
                     <span v-if='loadedpost.image_head'><img class='postimg' :src='loadedpost.image_head'></span>
                     <span v-if='loadedpost.body'><p>[[loadedpost.body]]</p></span>
+                    <div class='rate'><button @click='postrateup(loadedpost)'>↑</button><p>[[loadedpost.rate]]</p><button @click='postratedown(loadedpost)'>↓</button></div><div class='coms'><p></p></div>
+
+                    
+                </div>
+                <div class='com'>
+                    <span v-if='loadedpost.com_detail'>
+                        <span class='com' v-for='com in loadedpost.com_detail'>
+                            <button @click='loadprofile(com.user_detail)'>[[com.user_detail.username]]</button>
+                            <p class='combody'>[[com.body]]</p>
+                            <div class='rate'><button @click='comrateup(com)'>↑</button><p>[[com.rate]]</p><button @click='comratedown(com)'>↓</button></div>
+                        </span>
                 </div>
             </div>
-        </div>    
+        </div>
+
             {% if user.is_authenticated %}
             <div class='fpage'></div>
             {% endif %}

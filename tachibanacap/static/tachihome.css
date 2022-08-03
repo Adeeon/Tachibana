@@ -64,3 +64,15 @@ p {
     text-decoration: none;
     font-size: 17px;
 }
+
+.rate {
+    display:flex;
+    flex-direction: row;
+    max-width: 15%;
+    justify-content: left;
+}
+
+.rate button {
+    margin-left: 5px;
+    margin-right: 5px;
+}

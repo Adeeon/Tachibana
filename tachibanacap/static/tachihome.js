@@ -30,6 +30,8 @@ const vm = new Vue ({
         page: {},
         post: {},
         comment: {},
+        previous: {},
+        static: [],
 
         loadedpage: {},
         loadedpost: {},
@@ -44,6 +46,7 @@ const vm = new Vue ({
     },
     methods: {
         loadhome: function() {
+            this.previous = {}
             this.loadedpage = {}
             this.loadedpost = {}
             axios({
@@ -65,7 +68,61 @@ const vm = new Vue ({
                 method:'get',
                 url: 'api/v1/posts/' + post.id
             }).then(response => this.loadedpost = response.data)
-        }
+        },
+        comrateup: function(com) {
+            axios({
+                method:'patch', 
+                url: 'api/v1/comments/' + com.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    rate: com.rate + 1
+                }
+            }).then(response => this.static = response.data)
+            .then(loadpost(post))
+            
+        },
+        comratedown: function(com) {
+            axios({
+                method:'patch', 
+                url: 'api/v1/comments/' + com.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    rate: com.rate - 1
+                }
+            }).then(response => this.static = response.data)
+            .then(loadpost(post))
+            
+        },
+        postratedown: function(post) {
+            axios({
+                method:'patch', 
+                url: 'api/v1/posts/' + post.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    rate: post.rate - 1
+                }
+            }).then(response => this.static = response.data)
+            .then(loadpost(post))
+            
+        },
+        postrateup: function(post) {
+            axios({
+                method:'patch', 
+                url: 'api/v1/posts/' + post.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    rate: post.rate + 1
+                }
+            }).then(response => this.static = response.data)            
+        },
     },
     created: function (){
         axios({
