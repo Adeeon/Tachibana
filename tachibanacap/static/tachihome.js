@@ -58,10 +58,12 @@ const vm = new Vue ({
                 url:'api/v1/pages/' + page.id
             }).then(response => this.loadedpage = response.data)
         },
-        loadpost: function() {
+        loadpost: function(post) {
+            this.home = {}
+            this.loadedpage = {}
             axios({
                 method:'get',
-                url: 'api/v1/' + this.post
+                url: 'api/v1/posts/' + post.id
             }).then(response => this.loadedpost = response.data)
         }
     },
