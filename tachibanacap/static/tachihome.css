@@ -28,7 +28,7 @@ p {
 
     margin-left: 12px;
     text-align: center;
-    font-size: 16px;
+    font-size: 24px;
     border-color: grey;
     box-shadow: 1px 1px 1px 1px yellow; 
 }
@@ -39,14 +39,11 @@ p {
 
 }
 
-.page {
-    
-}
 p {
     font-size: 24px;
 }
-.post {
-    max-width: 80%;
+.post, .com {
+    max-width: 90%;
     max-height: 20%;
     border-style: solid;
     font-size: 24px;
@@ -54,15 +51,46 @@ p {
     border-radius: 16px;
     background-color: grey;
     margin: 10px;
-    padding:16px
+    margin-left:5%;
+    margin-right: 5%;
+    padding:16px;
+    justify-content: center;
+    
 }
 
 .topbar {
-    background-color: #333;
-    overflow: hidden;
-    position: absolute;
-    max-width: 100%;
+    position: fixed;
+    width: 100%;
+    top: 0;
 
+    background-color: rgb(79, 79, 79);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding:20px
+
+}
+
+.body {
+    text-overflow: ellipsis;
+    height: 28px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.new {
+    margin-top: 12%;
+    background-color: grey;
+    max-width: fit-content;
+    display: block;
+    justify-content: center;
+    font-size: 24px;
+    padding:10px;
+    margin-left: 25%
+       
+}
+.new label {
+    padding:5px
 }
 
 .searchbar {
@@ -84,4 +112,11 @@ p {
 .rate button {
     margin-left: 5px;
     margin-right: 5px;
+}
+
+.box {
+    margin-top: 12%
+}
+.options :hover {
+    display:none;
 }

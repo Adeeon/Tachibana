@@ -16,23 +16,57 @@
         <div class='topbar'>
             <button @click='loadhome'>Home</button>
             {% if user.is_authenticated %}
-            <h1>{{ user.username }}!<a href="{% url 'logout' %}">Logout</a></h1>
+            <div><button @click='options = !options'>[[options ? 'Close' : 'Options']]</button>
+                <ul v-if='options'>
+                    <button @click='newpage = !newpage'>[[newpage ? 'Close New Page' : 'New Page']]</button>
+                    <button @click='newpost = !newpost'>[[newpost ? 'Close New Post' : 'New Post']]</button>
+                </ul>
+            </div>
+            <div v-if='Object.keys(loadedpost).length'><button @click='newcomment= !newcomment'>[[newcomment? 'Close Comment Box':'New Comment']]</button>
+            </div>
+            <h1>Welcome&nbsp;{{ user.username }}!&nbsp;<a href="{% url 'logout' %}">Logout</a></h1>
             {% else %}
             <h1>Hello, Orange Inpersonator!</h1>
             <p>You are not logged in. <a href="{% url 'login' %}">Login</a> <a href="{% url 'users:signup' %}">Sign Up</a></p>
             {% endif %}
             <span v-if='Object.keys(errornotes).length'>apples</span>
-            <div class='searchbar'>
+            <div class='searchbar'>🔍
                 <input type='text' v-model='searchbar'>
             </div>
         </div>
+
+        <div class='new' v-if='newpage === true'>
+            
+                <label for='name'>Page Name</label><input v-model='newpageput.name' id='name' required='Required'></input><br>
+                <span v-model='newpageput.home = 1'></span>
+                <label for='purpose'>Page Purpose</label><input v-model='newpageput.purpose' id='purpose' required='Required'></input><br>
+                <label for='image'>Page Image (Not Required)</label><input v-model='newpageput.top_image' id='image'></input><br>
+                <button @click='newpagepost'>Submit</button>
+            
+        </div>
+        
+        <div class='new' v-if='newpost === true'>
+            
+                <label for='title'>Post Title</label><input v-model='newpostput.title' id='title' required='Required'></input><br>
+                <span v-model='newpostput.author = {{user.id}}'></span>
+                <label for='image'>Post Image (Not Required)</label><input v-model='newpostput.image_head' id='iamge'></input><br>
+                <label for='body'>Post Body</label><input v-model='newpostput.body' id='body' required='Required'></input><br>
+                <label for='page'>Related Page</label><select v-model='newpostput.page' id='page' required='Required'>
+                    <option  v-for='page in home' :value='page.id' :key='page.id'>[[page.name]]</option>
+                </select><br>               
+                <button @click='newpostpost'>Submit</button>
+            
+        </div>
+
+        
+
         <div class='box' v-if='Object.keys(home).length'>
             <div class='page' v-for='page in home'>
                 <div class='post' v-for='post in page.post_detail'>
-                    <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename' @click='loadpage(page)'>[[page.name]]</button></img> <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><button @click='loadprofile(post.user_detail)'>[[post.user_detail.username]]</button></span></span>
+                    <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' ></span><button class='pagename' @click='loadpage(page)'>[[page.name]]</button></img> <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><button @click='loadprofile(post.user_detail)'>[[post.user_detail.username]]</button></span>
                     <span v-if='post.title'><h1><button @click='loadpost(post)'>[[post.title]]</button></h1></span>
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
-                    <span v-if='post.body'><p>[[post.body]]</p></span>
+                    <span v-if='post.body'><p class='body'>[[post.body]]</p></span>
                     <div class='postbot'>
                         <div class='rate'><button @click='postrateup(post)'>↑</button><p>[[post.rate]]</p><button @click='postratedown(post)'>↓</button></div><div class='coms'><p></p></div>
                     </div>
@@ -41,7 +75,7 @@
         </div>
 
         <div class='box' v-if='Object.keys(loadedpage).length'>
-            <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
+            <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
 
             <div class='page'>
                 <div class='post' v-for='post in loadedpage.post_detail'>
@@ -57,6 +91,14 @@
         </div>
 
         <div class='box' v-if='Object.keys(loadedpost).length'>
+            <div class='new' v-if='newcomment === true'>
+            
+                <span v-model='newpostcomment.author = {{user.id}}'></span>
+                <label for='body'>Post Body</label><input v-model='newpostcomment.body' id='body' required='Required'></input><br>
+                <span v-model='newpostcomment.post = loadedpost.id'></span>
+                <button @click='newcommentpost'>Submit</button>
+            
+        </div>
             <div class='page'>
                 <div class='post'>
                     <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><button @click='loadprofile(loadedpost.user_detail.username)'>[[loadedpost.user_detail.username]]</button></span></span>
@@ -64,15 +106,16 @@
                     <span v-if='loadedpost.image_head'><img class='postimg' :src='loadedpost.image_head'></span>
                     <span v-if='loadedpost.body'><p>[[loadedpost.body]]</p></span>
                     <div class='rate'><button @click='postrateup(loadedpost)'>↑</button><p>[[loadedpost.rate]]</p><button @click='postratedown(loadedpost)'>↓</button></div><div class='coms'><p></p></div>
-
-                    
                 </div>
-                <div class='com'>
+
+                <div>
                     <span v-if='loadedpost.com_detail'>
-                        <span class='com' v-for='com in loadedpost.com_detail'>
+                        <span  v-for='com in loadedpost.com_detail'>
+                            <div class='com'>
                             <button @click='loadprofile(com.user_detail)'>[[com.user_detail.username]]</button>
                             <p class='combody'>[[com.body]]</p>
                             <div class='rate'><button @click='comrateup(com)'>↑</button><p>[[com.rate]]</p><button @click='comratedown(com)'>↓</button></div>
+                            </div>
                         </span>
                 </div>
             </div>

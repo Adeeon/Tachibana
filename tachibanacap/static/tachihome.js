@@ -24,8 +24,34 @@ const vm = new Vue ({
     data: {
         csrfToken: '',
         searchbar: '',
+        
+        options: false,
+        newpage: false,
+        newpost: false,
+        newcomment: false,
+
+        newpageput: {
+            'name':'',
+            'home': 1,
+            'purpose':'',
+            'top_image':null
+        },
+        newpostput: {
+            'title':'',
+            'author':'',
+            'body':'',
+            'page':'',
+            'image_head':null
+        },
+        newpostcomment: {
+            'body':'',
+            'author':0,
+            'post':0
+
+        },
 
         fpage: {},
+        
         home: {},
         page: {},
         post: {},
@@ -37,19 +63,62 @@ const vm = new Vue ({
         loadedpage: {},
         loadedpost: {},
 
-        newhome: {},
-        newpage: {},
-        newpost: {},
-        newcomment: {},
-
         rhome: {},
         errornotes: {},
     },
     methods: {
+        newpagepost: function() {
+            axios({
+                method: 'post',
+                url: 'api/v1/pages/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    'name':this.newpageput.name,
+                    'home':this.newpageput.home,
+                    'purpose':this.newpageput.purpose,
+                    'top_image':this.newpageput.top_image
+                }
+            }).then(response => {this.loadhome()})
+        },
+        newpostpost: function() {
+            axios({
+                method: 'post',
+                url: 'api/v1/posts/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    'author':this.newpostput.author,
+                    'title':this.newpostput.title,
+                    'image_head':this.newpostput.image_head,
+                    'body':this.newpostput.body,
+                    'page':this.newpostput.page
+                }
+            })
+        },
+        newcommentpost: function() {
+            axios({
+                method: 'post',
+                url: 'api/v1/comments/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    'body':this.newpostcomment.body,
+                    'author':this.newpostcomment.author,
+                    'post':this.newpostcomment.post,
+                }
+            }).then(response => {this.loadhome()})
+        },
         loadhome: function() {
             this.previous = {}
             this.loadedpage = {}
             this.loadedpost = {}
+            this.newpage = false
+            this.newpost = false
+            this.options = false
             axios({
                 method: 'get',
                 url:'api/v1/TachiHome'
@@ -133,10 +202,7 @@ const vm = new Vue ({
         },
     },
     created: function (){
-        axios({
-            method: 'get',
-            url:'api/v1/TachiHome'
-        }).then(response => this.home = response.data)
+        this.loadhome()
     },
     mounted: function() {
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
