@@ -55,7 +55,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'body', 'author', 'created', 'rate', 'post_detail', 'user_detail')
 
 class UserSerailizer(serializers.ModelSerializer):
-    post_detail = NestedPostSerializer(many=True, source='title', read_only=True)
+    post_detail = NestedPostSerializer(many=True, source='author', read_only=True)
     class Meta:
         model = CustomUser
         fields = ('username', 'post_detail')

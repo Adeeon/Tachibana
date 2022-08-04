@@ -32,6 +32,7 @@ const vm = new Vue ({
         comment: {},
         previous: {},
         static: [],
+        profile: {},
 
         loadedpage: {},
         loadedpost: {},
@@ -42,7 +43,7 @@ const vm = new Vue ({
         newcomment: {},
 
         rhome: {},
-        error: {},
+        errornotes: {},
     },
     methods: {
         loadhome: function() {
@@ -52,7 +53,8 @@ const vm = new Vue ({
             axios({
                 method: 'get',
                 url:'api/v1/TachiHome'
-            }).then(response => this.home = response.data)
+            }).then(response => {this.home = response.data})
+            .catch(error => {this.errornotes = error.resposne.data})
         },
         loadpage: function(page) {
             this.home = {}
@@ -68,6 +70,12 @@ const vm = new Vue ({
                 method:'get',
                 url: 'api/v1/posts/' + post.id
             }).then(response => this.loadedpost = response.data)
+        },
+        loadprofile: function(profile) {
+            axios({
+                method: 'get',
+                url: 'api/v1/users/' + profile.id
+            }).then(response => this.profile = response.data)
         },
         comrateup: function(com) {
             axios({

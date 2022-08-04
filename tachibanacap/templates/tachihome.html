@@ -21,6 +21,7 @@
             <h1>Hello, Orange Inpersonator!</h1>
             <p>You are not logged in. <a href="{% url 'login' %}">Login</a> <a href="{% url 'users:signup' %}">Sign Up</a></p>
             {% endif %}
+            <span v-if='Object.keys(errornotes).length'>apples</span>
             <div class='searchbar'>
                 <input type='text' v-model='searchbar'>
             </div>
@@ -28,7 +29,7 @@
         <div class='box' v-if='Object.keys(home).length'>
             <div class='page' v-for='page in home'>
                 <div class='post' v-for='post in page.post_detail'>
-                    <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename' @click='loadpage(page)'>[[page.name]]</button></img> Posted by <span v-if='post.user_detail.username'><a :href='post.user_detail.id'>[[post.user_detail.username]]</a></span></span>
+                    <span v-if='page.top_image'><img class='pageimg' :src='page.top_image' alt='o-SATAN-ART-facebook.jpg'><button class='pagename' @click='loadpage(page)'>[[page.name]]</button></img> <span v-if='post.author'> Posted by <span v-if='post.user_detail.username'><button @click='loadprofile(post.user_detail)'>[[post.user_detail.username]]</button></span></span>
                     <span v-if='post.title'><h1><button @click='loadpost(post)'>[[post.title]]</button></h1></span>
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
                     <span v-if='post.body'><p>[[post.body]]</p></span>

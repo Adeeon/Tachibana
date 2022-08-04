@@ -1,6 +1,9 @@
 html {
     box-sizing: border-box;
-    background-color: rgb(153, 153, 153)
+    background-color: rgb(153, 153, 153);
+    background-image: url('http://127.0.0.1:8000/media/oranges-in-a-box.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 *,*::before,*::after {
@@ -13,6 +16,11 @@ form, h1 {
 
 form {
     padding-top: 24px
+}
+
+label, li {
+    background-color: rgba(255, 192, 203, 0.589);
+    background-size: contain;
 }
 
 h1 {
@@ -31,5 +39,9 @@ label, li {
 }
 label, input, textarea {
     box-shadow: 1px 1px 2px 2px black ;
+}
+
+li {
+    margin-right: 32%
 }
 
