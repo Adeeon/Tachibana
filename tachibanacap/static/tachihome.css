@@ -89,6 +89,17 @@ p {
     margin-left: 25%
        
 }
+.newcom {
+    
+    background-color: grey;
+    max-width: fit-content;
+    display: block;
+    justify-content: center;
+    font-size: 24px;
+    padding:10px;
+    margin-left: 25%
+       
+}
 .new label {
     padding:5px
 }

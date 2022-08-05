@@ -15,15 +15,19 @@
        
         <div class='topbar'>
             <button @click='loadhome'>Home</button>
+            <div v-if='Object.keys(loadedpage).length'>
+                <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
+            </div>
+            <div v-if='Object.keys(loadedpost).length'>
+                <span v-if='loadedpost.page_detail.top_image'><img class='pageimg' :src='loadedpost.page_detail.top_image'><button class='pagename'  @click='loadpage(loadedpost.page_detail)'>[[loadedpost.page_detail.name]]</button></img>
+            </div>
             {% if user.is_authenticated %}
-            <div><button @click='options = !options'>[[options ? 'Close' : 'Options']]</button>
-                <ul v-if='options'>
+            <div>
                     <button @click='newpage = !newpage'>[[newpage ? 'Close New Page' : 'New Page']]</button>
                     <button @click='newpost = !newpost'>[[newpost ? 'Close New Post' : 'New Post']]</button>
-                </ul>
+                
             </div>
-            <div v-if='Object.keys(loadedpost).length'><button @click='newcomment= !newcomment'>[[newcomment? 'Close Comment Box':'New Comment']]</button>
-            </div>
+            
             <h1>Welcome&nbsp;{{ user.username }}!&nbsp;<a href="{% url 'logout' %}">Logout</a></h1>
             {% else %}
             <h1>Hello, Orange Inpersonator!</h1>
@@ -68,14 +72,13 @@
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
                     <span v-if='post.body'><p class='body'>[[post.body]]</p></span>
                     <div class='postbot'>
-                        <div class='rate'><button @click='postrateup(post)'>↑</button><p>[[post.rate]]</p><button @click='postratedown(post)'>↓</button></div><div class='coms'><p></p></div>
+                        <div class='rate'>{% if user.is_authenticated%}<button @click='postrateup(post)'>↑</button><p> {%else%}<p> Likes:{%endif%}[[post.rate]]</p>{% if user.is_authenticated%}<button @click='postratedown(post)'>↓</button>{%endif%}</div><div class='coms'><p></p></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class='box' v-if='Object.keys(loadedpage).length'>
-            <span v-if='loadedpage.top_image'><img class='pageimg' :src='loadedpage.top_image'><button class='pagename'  @click='loadpage(page)'>[[loadedpage.name]]</button></img>
 
             <div class='page'>
                 <div class='post' v-for='post in loadedpage.post_detail'>
@@ -84,39 +87,80 @@
                     <span v-if='post.image_head'><img class='postimg' :src='post.image_head'></span>
                     <span v-if='post.body'><p>[[post.body]]</p></span>
                     <div class='postbot'>
-                    <div class='rate'><button @click='postrateup(post)'>↑</button><p>[[post.rate]]</p><button @click='postratedown(post)'>↓</button></div><div class='coms'><p></p></div>
+                    <div class='rate'>
+                        {% if user.is_authenticated%}<button @click='postrateup(post)'>↑</button><p> {%else%}<p> Likes:{%endif%}[[post.rate]]</p>{% if user.is_authenticated%}<button @click='postratedown(post)'>↓</button>{%endif%}</div><div class='coms'><p></p></div>
                     </div>      
                 </div>
             </div>
         </div>
 
         <div class='box' v-if='Object.keys(loadedpost).length'>
-            <div class='new' v-if='newcomment === true'>
-            
-                <span v-model='newpostcomment.author = {{user.id}}'></span>
-                <label for='body'>Post Body</label><input v-model='newpostcomment.body' id='body' required='Required'></input><br>
-                <span v-model='newpostcomment.post = loadedpost.id'></span>
-                <button @click='newcommentpost'>Submit</button>
-            
-        </div>
             <div class='page'>
-                <div class='post'>
-                    <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><button @click='loadprofile(loadedpost.user_detail.username)'>[[loadedpost.user_detail.username]]</button></span></span>
-                    <span v-if='loadedpost.title'><h1><a @click='loadedpost(post)'>[[loadedpost.title]]</a></h1></span>
-                    <span v-if='loadedpost.image_head'><img class='postimg' :src='loadedpost.image_head'></span>
-                    <span v-if='loadedpost.body'><p>[[loadedpost.body]]</p></span>
-                    <div class='rate'><button @click='postrateup(loadedpost)'>↑</button><p>[[loadedpost.rate]]</p><button @click='postratedown(loadedpost)'>↓</button></div><div class='coms'><p></p></div>
+                <div v-if='editcom === false'>
+                    <div class='post' v-if='edit === true'>
+                        <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><button @click='loadprofile(loadedpost.user_detail.username)'>[[loadedpost.user_detail.username]]</button></span></span><br>
+                        <span v-if='loadedpost.title'><input type='text' v-model='loadedpost.title' placeholder='loadedpost.title'></span><br>
+                        <input type='file' name='image_head' id='id_image_head' v-model='newimage' accept='image/*'>
+                        <span v-if='loadedpost.image_head'><p>Old Image ↓</p><img class='postimg' :src='loadedpost.image_head'></span><br>
+                        <span v-if='loadedpost.body'><input type='text' v-model='loadedpost.body' placeholder='loadedpost.body'></span><br>
+                        <div class='rate'>
+                            {% if user.is_authenticated%}<button @click='postrateup(loadedpost)'>↑</button><p> {%else%}<p> Likes:{%endif%}[[loadedpost.rate]]</p>{% if user.is_authenticated%}<button @click='postratedown(loadedpost)'>↓</button>{%endif%}
+                            <button v-if='loadpost.author = {{user.id}}' @click='edit = !edit'>[[edit ? 'Close Edit' : 'Edit Post']]</button>
+                            <button @click='editpost()'>Submit</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <span v-if='loadedpost.com_detail'>
-                        <span  v-for='com in loadedpost.com_detail'>
-                            <div class='com'>
-                            <button @click='loadprofile(com.user_detail)'>[[com.user_detail.username]]</button>
-                            <p class='combody'>[[com.body]]</p>
-                            <div class='rate'><button @click='comrateup(com)'>↑</button><p>[[com.rate]]</p><button @click='comratedown(com)'>↓</button></div>
+                <div v-if='editcom === false'>
+                    <div class='post' v-if='edit === false'>
+                        <span v-if='loadedpost.author'> Posted by <span v-if='loadedpost.user_detail.username'><button @click='loadprofile(loadedpost.user_detail.username)'>[[loadedpost.user_detail.username]]</button></span></span>
+                        <span v-if='loadedpost.title'><h1><a @click='loadedpost(post)'>[[loadedpost.title]]</a></h1></span>
+                        <span v-if='loadedpost.image_head'><img class='postimg' :src='loadedpost.image_head'></span>
+                        <span v-if='loadedpost.body'><span v-if='loadedpost.created != loadedpost.updated'><em>Edited</em></span> <p>[[loadedpost.body]]</p></span>
+                        <div class='rate'>
+                            {% if user.is_authenticated%}<button @click='postrateup(loadedpost)'>↑</button><p> {%else%}<p> Likes:{%endif%}[[loadedpost.rate]]</p>{% if user.is_authenticated%}<button @click='postratedown(loadedpost)'>↓</button>{%endif%}
+                            {% if user.is_authenticated%}<button @click='newcomment= !newcomment'>[[newcomment? 'Close Comment Box':'New Comment']]</button>{%endif%}
+                            <button v-if='loadpost.author = {{user.id}}' @click='edit = !edit'>[[edit ? 'Close Edit' : 'Edit Post']]</button>
+                        </div>
+                    </div>
+                </div>
+                <div class='newcom' v-if='newcomment === true'>
+            
+                    <span v-model='newpostcomment.author = {{user.id}}'></span>
+                    <label for='body'>New Comment</label><input v-model='newpostcomment.body' id='body' required='Required'></input><br>
+                    <span v-model='newpostcomment.post = loadedpost.id'></span>
+                    <button @click='newcommentpost'>Submit</button>
+                
+                </div>
+
+                <div v-if='editcom === true'>
+                    <div v-if='loadedpost.com_detail' >
+                        <div v-for='com in loadedpost.com_detail'>
+                            <div class='com' v-if='com.user_detail.id = {{user.id}}'>
+                                <button @click='loadprofile(com.user_detail)'>[[com.user_detail.username]]</button>
+                                <input class='combody' v-model='com.body'>
+                                <div class='rate'>
+                                    <button v-if='com.author = {{user.id}}' @click='editcom = !editcom'>[[editcom ? 'Close Edit' : 'Edit Comment']]</button>
+                                    <button @click='editcomment(com, loadedpost)'>Submit</button>
+                                </div>
                             </div>
-                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if='editcom === false'>
+                    <div v-if='loadedpost.com_detail' >
+                        <div  v-for='com in loadedpost.com_detail'>
+                            <div class='com'>
+                                <button @click='loadprofile(com.user_detail)'>[[com.user_detail.username]]</button>
+                                <span v-if='com.created != com.updated'><em>Edited</em></span><p class='combody'>[[com.body]]</p>
+                                <div class='rate'>
+                                    {% if user.is_authenticated%}<button @click='comrateup(com)'>↑</button><p> {%else%}<p> Likes:{%endif%}[[com.rate]]</p>{% if user.is_authenticated%}<button @click='comratedown(com)'>↓</button>{%endif%}
+                                    <button v-if='com.author = {{user.id}}' @click='editcom = !editcom'>[[editcom ? 'Close Edit' : 'Edit Comment']]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

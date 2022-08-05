@@ -25,10 +25,12 @@ const vm = new Vue ({
         csrfToken: '',
         searchbar: '',
         
-        options: false,
+       
         newpage: false,
         newpost: false,
         newcomment: false,
+        edit: false,
+        editcom: false,
 
         newpageput: {
             'name':'',
@@ -47,10 +49,10 @@ const vm = new Vue ({
             'body':'',
             'author':0,
             'post':0
-
         },
 
         fpage: {},
+        newimage: '',
         
         home: {},
         page: {},
@@ -67,6 +69,39 @@ const vm = new Vue ({
         errornotes: {},
     },
     methods: {
+        editcomment: function(comment) {
+            axios({
+                method: 'put',
+                url: 'api/v1/comments/' + comment.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                }, 
+                data: {
+                    'body': comment.body,
+                    'author': comment.author,
+                    'post': this.loadedpost.id
+                }
+            })
+            return this.loadpost(this.loadedpost)
+        },
+        editpost: function() {
+            let filename = this.newimage
+            axios({
+                method: 'put',
+                url: 'api/v1/posts/' + this.loadedpost.id + '/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                }, 
+                data: {
+                    'title':this.loadedpost.title,
+                    'author': this.loadedpost.author,
+                    'body':this.loadedpost.body,
+                    'page':this.loadedpost.page_detail.id,
+                    'image_head': filename
+                }
+            })
+            return this.loadpost(this.loadedpost)
+        },
         newpagepost: function() {
             axios({
                 method: 'post',
@@ -80,7 +115,8 @@ const vm = new Vue ({
                     'purpose':this.newpageput.purpose,
                     'top_image':this.newpageput.top_image
                 }
-            }).then(response => {this.loadhome()})
+            })
+            return this.loadhome()
         },
         newpostpost: function() {
             axios({
@@ -95,7 +131,7 @@ const vm = new Vue ({
                     'image_head':this.newpostput.image_head,
                     'body':this.newpostput.body,
                     'page':this.newpostput.page
-                }
+                },
             })
         },
         newcommentpost: function() {
@@ -110,15 +146,18 @@ const vm = new Vue ({
                     'author':this.newpostcomment.author,
                     'post':this.newpostcomment.post,
                 }
-            }).then(response => {this.loadhome()})
+            }).then(this.loadpost(this.loadedpost))
         },
         loadhome: function() {
             this.previous = {}
+            this.newimage = ''
             this.loadedpage = {}
             this.loadedpost = {}
             this.newpage = false
             this.newpost = false
-            this.options = false
+            this.newcomment = false
+            this.edit = false
+            this.editcom = false
             axios({
                 method: 'get',
                 url:'api/v1/TachiHome'
@@ -127,6 +166,13 @@ const vm = new Vue ({
         },
         loadpage: function(page) {
             this.home = {}
+            this.loadedpost = {}
+            this.newimage = ''
+            this.newpage = false
+            this.newpost = false
+            this.newcomment = false
+            this.edit = false
+            this.editcom = false
             axios({
                 method:'get', 
                 url:'api/v1/pages/' + page.id
@@ -135,6 +181,12 @@ const vm = new Vue ({
         loadpost: function(post) {
             this.home = {}
             this.loadedpage = {}
+            this.newimage = ''
+            this.newpage = false
+            this.newpost = false
+            this.newcomment = false
+            this.edit = false
+            this.editcom = false
             axios({
                 method:'get',
                 url: 'api/v1/posts/' + post.id
@@ -185,7 +237,12 @@ const vm = new Vue ({
                     rate: post.rate - 1
                 }
             }).then(response => this.static = response.data)
-            .then(loadpost(post))
+            if ((this.loadhome).length) {
+                return this.loadhome()
+            }
+            else if ((this.loadedpage).length) {
+                this.loadpage(this.loadedpage)
+            }
             
         },
         postrateup: function(post) {
@@ -198,7 +255,13 @@ const vm = new Vue ({
                 data: {
                     rate: post.rate + 1
                 }
-            }).then(response => this.static = response.data)            
+            })
+            if (this.loadhome.length) {
+                return this.loadhome()
+            }
+            else if (this.loadedpage.length) {
+                this.loadpage(this.loadedpage)
+            }            
         },
     },
     created: function (){
